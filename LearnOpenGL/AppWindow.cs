@@ -15,9 +15,9 @@ partial class AppWindow : GameWindow
     // OpenGL only supports rendering in 3D, so to create a flat triangle, the Z coordinate will be kept as 0.
     private readonly float[] _vertices =
         {
-            -0.5f, -0.5f, 0.0f, // Bottom-left vertex
-             0.5f, -0.5f, 0.0f, // Bottom-right vertex
-             0.0f,  0.5f, 0.0f  // Top vertex
+            -0.5f, -0.5f, 0.0f, 1, 0, 0, // Bottom-left vertex
+             0.5f, -0.5f, 0.0f, 0, 1, 0, // Bottom-right vertex
+             0.0f,  0.5f, 0.0f, 0, 0, 1  // Top vertex
         };
 
     // These are the handles to OpenGL objects. A handle is an integer representing where the object lives on the
@@ -101,10 +101,12 @@ partial class AppWindow : GameWindow
         //   The stride; this is how many bytes are between the last element of one vertex and the first element of the next. 3 * sizeof(float) in this case.
         //   The offset; this is how many bytes it should skip to find the first element of the first vertex. 0 as of right now.
         // Stride and Offset are just sort of glossed over for now, but when we get into texture coordinates they'll be shown in better detail.
-        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+        GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
         // Enable variable 0 in the shader.
         GL.EnableVertexAttribArray(0);
+        GL.EnableVertexAttribArray(1);
 
         // We've got the vertices done, but how exactly should this be converted to pixels for the final image?
         // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
