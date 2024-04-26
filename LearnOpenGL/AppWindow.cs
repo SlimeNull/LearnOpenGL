@@ -83,6 +83,9 @@ partial class AppWindow : GameWindow
     private int _vertexBufferObject;
     private int _vertexArrayObject;
 
+    private Matrix4 _viewMatrix = Matrix4.Identity;
+    private Matrix4 _projectMatrix = Matrix4.Identity;
+
     // This class is a wrapper around a shader, which helps us manage it.
     // The shader class's code is in the Common project.
     // What shaders are and what they're used for will be explained later in this tutorial.
@@ -194,6 +197,10 @@ partial class AppWindow : GameWindow
 
         _shader.Use();
 
+        _viewMatrix = Matrix4.CreateTranslation(0, 0, -3);
+        _projectMatrix = Matrix4.CreatePerspectiveFieldOfView(MathF.PI / 2, (float)ClientSize.X / ClientSize.Y, 0.1f, 100f);
+
+        // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
         GL.Enable(EnableCap.CullFace);
         GL.FrontFace(FrontFaceDirection.Cw);
     }
@@ -223,6 +230,13 @@ partial class AppWindow : GameWindow
         GL.UniformMatrix4(transformLocation, false, ref finalMatrix);
 
 
+        var modelMatrix = Matrix4.CreateTranslation(0, 0, -3f);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "model"), false, ref modelMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "view"), false, ref _viewMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "projection"), false, ref _projectMatrix);
+
+        var timeLocation = GL.GetUniformLocation(_shader.Handle, "time");
+        GL.Uniform1(timeLocation, (float)Environment.TickCount / 1000);
 
         // Bind the VAO
         GL.BindVertexArray(_vertexArrayObject);
