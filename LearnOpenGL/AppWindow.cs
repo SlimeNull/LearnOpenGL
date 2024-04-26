@@ -326,7 +326,7 @@ partial class AppWindow : GameWindow
             var xOffset = mouseInput.X - mouseInput.PreviousX;
             var yOffset = mouseInput.Y - mouseInput.PreviousY;
 
-            _rotationMatrix4 = GetRotationMatrix(_radianPerPixel * yOffset, _radianPerPixel * xOffset, 0) * _rotationMatrix4;
+            _rotationMatrix4 = _rotationMatrix4 * GetRotationMatrix(-_radianPerPixel * yOffset, -_radianPerPixel * xOffset, 0);
         }
 
         if (mouseInput.ScrollDelta != default)
