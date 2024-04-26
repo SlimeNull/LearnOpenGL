@@ -144,6 +144,9 @@ partial class AppWindow : GameWindow
         // Bind the shader
         _shader.Use();
 
+        var timeLocation = GL.GetUniformLocation(_shader.ProgramHandle, "time");
+        GL.Uniform1(timeLocation, (float)Environment.TickCount / 1000);
+
         // Bind the VAO
         GL.BindVertexArray(_vertexArrayObject);
 
@@ -211,7 +214,7 @@ partial class AppWindow : GameWindow
         GL.DeleteBuffer(_vertexBufferObject);
         GL.DeleteVertexArray(_vertexArrayObject);
 
-        GL.DeleteProgram(_shader.Handle);
+        GL.DeleteProgram(_shader.ProgramHandle);
 
         base.OnUnload();
     }
