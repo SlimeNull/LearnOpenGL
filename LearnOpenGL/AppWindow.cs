@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -26,8 +27,10 @@ partial class AppWindow : GameWindow
 
     // What these objects are will be explained in OnLoad.
     private int _vertexBufferObject;
-
     private int _vertexArrayObject;
+
+    private Matrix4 _viewMatrix = Matrix4.Identity;
+    private Matrix4 _projectMatrix = Matrix4.Identity;
 
     // This class is a wrapper around a shader, which helps us manage it.
     // The shader class's code is in the Common project.
@@ -122,6 +125,9 @@ partial class AppWindow : GameWindow
         // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
         _shader.Use();
 
+        _viewMatrix = Matrix4.CreateTranslation(0, 0, -3);
+        _projectMatrix = Matrix4.CreatePerspectiveFieldOfView(MathF.PI / 2, (float)ClientSize.X / ClientSize.Y, 0.1f, 100f);
+
         // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
     }
 
@@ -143,6 +149,11 @@ partial class AppWindow : GameWindow
 
         // Bind the shader
         _shader.Use();
+
+        var modelMatrix = Matrix4.CreateTranslation(0, 0, -3f);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "model"), false, ref modelMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "view"), false, ref _viewMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "projection"), false, ref _projectMatrix);
 
         var timeLocation = GL.GetUniformLocation(_shader.ProgramHandle, "time");
         GL.Uniform1(timeLocation, (float)Environment.TickCount / 1000);
