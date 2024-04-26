@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using StbImageSharp;
 
 namespace LearnOpenGL;
 
@@ -14,11 +15,11 @@ partial class AppWindow : GameWindow
     // Negative Y coordinates move to the bottom, positive Y move to the top.
     // OpenGL only supports rendering in 3D, so to create a flat triangle, the Z coordinate will be kept as 0.
     private readonly float[] _vertices =
-        {
-            -0.5f, -0.5f, 0.0f, // Bottom-left vertex
-             0.5f, -0.5f, 0.0f, // Bottom-right vertex
-             0.0f,  0.5f, 0.0f  // Top vertex
-        };
+    {
+        -0.5f, -0.5f, 0.0f, 0, 1, // Bottom-left vertex
+        0.5f,  -0.5f, 0.0f, 1, 1, // Bottom-right vertex
+        0.0f,  0.5f,  0.0f, 0.5f, 0  // Top vertex
+    };
 
     // These are the handles to OpenGL objects. A handle is an integer representing where the object lives on the
     // graphics card. Consider them sort of like a pointer; we can't do anything with them directly, but we can
@@ -101,10 +102,12 @@ partial class AppWindow : GameWindow
         //   The stride; this is how many bytes are between the last element of one vertex and the first element of the next. 3 * sizeof(float) in this case.
         //   The offset; this is how many bytes it should skip to find the first element of the first vertex. 0 as of right now.
         // Stride and Offset are just sort of glossed over for now, but when we get into texture coordinates they'll be shown in better detail.
-        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+        GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+        GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
         // Enable variable 0 in the shader.
         GL.EnableVertexAttribArray(0);
+        GL.EnableVertexAttribArray(1);
 
         // We've got the vertices done, but how exactly should this be converted to pixels for the final image?
         // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
@@ -115,6 +118,16 @@ partial class AppWindow : GameWindow
         using var vertShaderSource = File.OpenText("Shaders/shader.vert");
         using var fragShaderSource = File.OpenText("Shaders/shader.frag");
         _shader = new Shader(vertShaderSource, fragShaderSource);
+
+        var avatarStream = File.OpenRead("Assets/avatar.jpg");
+        var image = ImageResult.FromStream(avatarStream);
+
+        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgb, image.Width, image.Height, 0, PixelFormat.Rgb, PixelType.UnsignedByte, image.Data);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+        //var texture = GL.GenTexture();
+        //GL.BindTexture(TextureTarget.Texture2D, texture);
+        //GL.GenerateTextureMipmap(texture);
 
         // Now, enable the shader.
         // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
