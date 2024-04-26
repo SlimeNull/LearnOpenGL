@@ -160,11 +160,11 @@ partial class AppWindow : GameWindow
         _vertexArrayObject = GL.GenVertexArray();
         GL.BindVertexArray(_vertexArrayObject);
 
-
+        // 定义数据结构, 由 3 个 float 构成模型顶点坐标以及 2 个 float 构成 UV 坐标
         GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
         GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-
+        // 启用属性 0 和 1
         GL.EnableVertexAttribArray(0);
         GL.EnableVertexAttribArray(1);
 
@@ -326,7 +326,7 @@ partial class AppWindow : GameWindow
             var xOffset = mouseInput.X - mouseInput.PreviousX;
             var yOffset = mouseInput.Y - mouseInput.PreviousY;
 
-            _rotationMatrix4 = GetRotationMatrix(_radianPerPixel * yOffset, _radianPerPixel * xOffset, 0) * _rotationMatrix4;
+            _rotationMatrix4 = _rotationMatrix4 * GetRotationMatrix(-_radianPerPixel * yOffset, -_radianPerPixel * xOffset, 0);
         }
 
         if (mouseInput.ScrollDelta != default)
@@ -357,6 +357,7 @@ partial class AppWindow : GameWindow
         // When the window gets resized, we have to call GL.Viewport to resize OpenGL's viewport to match the new size.
         // If we don't, the NDC will no longer be correct.
         GL.Viewport(0, 0, Size.X, Size.Y);
+        _projectMatrix = Matrix4.CreatePerspectiveFieldOfView(MathF.PI / 2, (float)ClientSize.X / ClientSize.Y, 0.1f, 100f);
     }
 
     // Now, for cleanup.
