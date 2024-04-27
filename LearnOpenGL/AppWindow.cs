@@ -41,7 +41,9 @@ partial class AppWindow : GameWindow
                 {
                     ClearType = CameraClearType.Color,
                     ClearColor = new Color4(30, 30, 30, 255)
-                }
+                },
+
+                new CameraTestComponent(),
             }
         };
 
@@ -53,6 +55,8 @@ partial class AppWindow : GameWindow
                 cameraObject,
             },
             Output = this,
+            KeyboardState = KeyboardState,
+            MouseState = MouseState,
         };
     }
 
@@ -66,6 +70,13 @@ partial class AppWindow : GameWindow
     protected override unsafe void OnLoad()
     {
         base.OnLoad();
+
+        //// 深度测试
+        //GL.Enable(EnableCap.DepthTest);
+
+        //// 背面剔除
+        //GL.Enable(EnableCap.CullFace);
+        //GL.FrontFace(FrontFaceDirection.Cw);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -78,8 +89,9 @@ partial class AppWindow : GameWindow
             _notFirstFrame = true;
         }
 
-        game.GameUpdate();
-        game.GameLateUpdate();
+        var deltaTime = (float)e.Time;
+        game.GameUpdate(deltaTime);
+        game.GameLateUpdate(deltaTime);
 
         SwapBuffers();
     }

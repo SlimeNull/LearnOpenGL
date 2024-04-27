@@ -3,13 +3,6 @@ using OpenTK.Mathematics;
 
 namespace OpenGaming.Components
 {
-    public enum CameraClearType
-    {
-        None,
-        Color,
-        Depth,
-        Skybox,
-    }
 
     public class Camera : GameComponent
     {
@@ -38,16 +31,12 @@ namespace OpenGaming.Components
                     GL.ClearDepth(ClearDepth);
                     GL.Clear(ClearBufferMask.DepthBufferBit);
                     break;
-
-                case CameraClearType.Skybox:
-                    throw new NotImplementedException();
-                    break;
             }
         }
 
-        public override void GameUpdate()
+        public override void GameUpdate(float deltaTime)
         {
-            base.GameUpdate();
+            base.GameUpdate(deltaTime);
 
             if (Owner is not GameObject selfGameObject ||
                 selfGameObject.Owner is not Game game)
@@ -73,9 +62,9 @@ namespace OpenGaming.Components
             }
         }
 
-        public override void GameLateUpdate()
+        public override void GameLateUpdate(float deltaTime)
         {
-            base.GameLateUpdate();
+            base.GameLateUpdate(deltaTime);
         }
 
         public Matrix4 GetViewMatrix()

@@ -4,9 +4,9 @@
     {
         public Material? Material { get; set; }
 
-        public override void GameUpdate()
+        public override void GameUpdate(float deltaTime)
         {
-            base.GameUpdate();
+            base.GameUpdate(deltaTime);
         }
 
         public virtual void Render(Camera camera)

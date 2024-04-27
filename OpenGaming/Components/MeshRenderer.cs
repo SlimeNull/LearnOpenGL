@@ -4,9 +4,9 @@
     {
         public Mesh? Mesh { get; set; }
 
-        public override void GameUpdate()
+        public override void GameUpdate(float deltaTime)
         {
-            base.GameUpdate();
+            base.GameUpdate(deltaTime);
         }
 
         public override void Render(Camera camera)

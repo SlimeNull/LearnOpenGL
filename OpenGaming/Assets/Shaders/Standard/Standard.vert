@@ -18,8 +18,8 @@ out vec3 vertexColor;
 
 void main()
 {
-    vec4 finalModelPosition = vec4(position, 1);
-    vec4 finalPosition = projectionMatrix * viewMatrix * modelMatrix * finalModelPosition;
+    vec4 vertexPosition = vec4(position, 1);
+    vec4 finalPosition = projectionMatrix * viewMatrix * modelMatrix * vertexPosition;
 
     gl_Position = finalPosition;
 

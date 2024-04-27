@@ -9,12 +9,12 @@ public class GameComponent
 
     }
 
-    public virtual void GameUpdate()
+    public virtual void GameUpdate(float deltaTime)
     {
 
     }
 
-    public virtual void GameLateUpdate()
+    public virtual void GameLateUpdate(float deltaTime)
     {
 
     }

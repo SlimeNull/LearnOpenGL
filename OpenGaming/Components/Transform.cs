@@ -21,11 +21,27 @@ namespace OpenGaming.Components
 
         public Matrix4 GetModelMatrix()
         {
-            var scaleMatrix = Matrix4.CreateScale(Scale);
             var rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);
+            var scaleMatrix = Matrix4.CreateScale(Scale);
             var translateMatrix = Matrix4.CreateTranslation(Position);
 
-            return translateMatrix * rotationMatrix * scaleMatrix;
+            var finalMatrix = rotationMatrix * scaleMatrix * translateMatrix;
+            return finalMatrix;
+        }
+
+        public void Translate(Vector3 offset)
+        {
+            Position += offset;
+        }
+
+        public void Rotate(Quaternion rotation)
+        {
+            Rotation = rotation * Rotation;
+        }
+
+        public void Rotate(Vector3 eulerAngles)
+        {
+            Rotation = Quaternion.FromEulerAngles(eulerAngles) * Rotation;
         }
     }
 }

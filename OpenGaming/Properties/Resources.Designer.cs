@@ -62,6 +62,48 @@ namespace OpenGaming.Properties {
         
         /// <summary>
         ///   查找类似 #version 330 core
+        ///in vec3 TexCoords;
+        ///out vec4 FragColor;
+        ///
+        ///uniform samplerCube skybox;
+        ///
+        ///void main(){ 
+        ///    FragColor = texture(skybox, TexCoords);
+        ///} 的本地化字符串。
+        /// </summary>
+        internal static string SkyboxFragmentShader {
+            get {
+                return ResourceManager.GetString("SkyboxFragmentShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 #version 330 core
+        ///layout (location = 0) in vec3 aPos;
+        ///
+        ///// 纹理坐标是3维的
+        ///out vec3 TexCoords;
+        ///// 不用model转换到世界矩阵
+        ///uniform mat4 projection;
+        ///uniform mat4 view;
+        ///
+        ///void main()
+        ///{
+        ///    // 纹理坐标等于位置坐标/
+        ///    TexCoords = aPos;
+        ///    vec4 pos = projection * view * vec4(aPos, 1.0);
+        ///    // z为w，透视除法除后z=(z=w/w)=1，深度为最远///
+        ///    gl_Position = pos.xyww;
+        ///} 的本地化字符串。
+        /// </summary>
+        internal static string SkyboxVertexShader {
+            get {
+                return ResourceManager.GetString("SkyboxVertexShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 #version 330 core
         ///
         ///in vec3 vertexWorldPosition;
         ///in vec3 vertexNormal;
@@ -83,7 +125,10 @@ namespace OpenGaming.Properties {
         ///{
         ///    vec4 color = vec4(vertexColor, 1);
         ///    vec4 ambientColor = color * ambient;
-        ///} 的本地化字符串。
+        ///
+        ///    vec4 finalColor = vec4(vertexColor, 1);
+        ///
+        ///    f [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string StandardFragmentShader {
             get {
@@ -112,8 +157,8 @@ namespace OpenGaming.Properties {
         ///
         ///void main()
         ///{
-        ///    vec4 finalModelPosition = vec4(position, 1) + texture2D(displacementTexture, uv);
-        ///    vec4 finalPosition = [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///    vec4 finalModelPosition = vec4(position, 1);
+        ///    vec4 finalPosition = projectionMatrix * viewMatrix * mode [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string StandardVertexShader {
             get {
