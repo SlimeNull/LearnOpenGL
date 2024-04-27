@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace LearnOpenGL.Gaming
+namespace OpenGaming
 {
     public class MeshBuilder
     {

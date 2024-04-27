@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK.Mathematics;
 
-namespace LearnOpenGL.Gaming.Components
+namespace OpenGaming.Components
 {
     public class Transform : GameComponent
     {
@@ -20,21 +20,6 @@ namespace LearnOpenGL.Gaming.Components
             var translateMatrix = Matrix4.CreateTranslation(Position);
 
             return translateMatrix * rotationMatrix * scaleMatrix;
-        }
-    }
-
-    public abstract class Renderer : GameComponent
-    {
-        public Material? Material { get; set; }
-    }
-
-    public class MeshRenderer : Renderer
-    {
-        public Mesh? Mesh { get; set; }
-
-        protected override void Update()
-        {
-            base.Update();
         }
     }
 }

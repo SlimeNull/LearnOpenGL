@@ -1,4 +1,4 @@
-﻿namespace LearnOpenGL.Gaming;
+﻿namespace OpenGaming;
 
 public class Game
 {
@@ -9,35 +9,50 @@ public class Game
         Objects = new(this);
     }
 
-    public void Start()
+    public void GameStart()
     {
         foreach (var gameObject in Objects)
         {
+            if (!gameObject.IsActive)
+            {
+                continue;
+            }
+
             foreach (var gameObjectComponent in gameObject.Components)
             {
-                gameObjectComponent.Start();
+                gameObjectComponent.GameStart();
             }
         }
     }
 
-    public void Update()
+    public void GameUpdate()
     {
         foreach (var gameObject in Objects)
         {
+            if (!gameObject.IsActive)
+            {
+                continue;
+            }
+
             foreach (var gameObjectComponent in gameObject.Components)
             {
-                gameObjectComponent.Update();
+                gameObjectComponent.GameUpdate();
             }
         }
     }
 
-    public void LateUpdate()
+    public void GameLateUpdate()
     {
         foreach (var gameObject in Objects)
         {
+            if (!gameObject.IsActive)
+            {
+                continue;
+            }
+
             foreach (var gameObjectComponent in gameObject.Components)
             {
-                gameObjectComponent.LateUpdate();
+                gameObjectComponent.GameLateUpdate();
             }
         }
     }

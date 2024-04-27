@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace LearnOpenGL.Gaming;
+namespace OpenGaming;
 
 public class Material
 {
@@ -76,4 +76,7 @@ public class Material
             }
         }
     }
+
+    public static Material Create(Shader shader)
+        => new Material(shader);
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace LearnOpenGL.Gaming;
+namespace OpenGaming;
 
 public class GameObjectsCollection : ICollection<GameObject>
 {

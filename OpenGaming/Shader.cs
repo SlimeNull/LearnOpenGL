@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace LearnOpenGL.Gaming;
+namespace OpenGaming;
 
 public class Shader : IDisposable
 {
