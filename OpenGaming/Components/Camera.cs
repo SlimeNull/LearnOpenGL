@@ -31,10 +31,12 @@ namespace OpenGaming.Components
 
                 case CameraClearType.Color:
                     GL.ClearColor(ClearColor);
+                    GL.Clear(ClearBufferMask.ColorBufferBit);
                     break;
 
                 case CameraClearType.Depth:
                     GL.ClearDepth(ClearDepth);
+                    GL.Clear(ClearBufferMask.DepthBufferBit);
                     break;
 
                 case CameraClearType.Skybox:

@@ -39,7 +39,8 @@ partial class AppWindow : GameWindow
             {
                 new Camera()
                 {
-
+                    ClearType = CameraClearType.Color,
+                    ClearColor = new Color4(30, 30, 30, 255)
                 }
             }
         };
@@ -67,27 +68,11 @@ partial class AppWindow : GameWindow
         base.OnLoad();
 
         cameraObject.Components.Transform.Position = new Vector3(0, 0, 10);
-
-        GL.ClearColor(0.6f, 0.6f, .3f, 1);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
     {
         base.OnRenderFrame(e);
-
-        GL.Clear(ClearBufferMask.ColorBufferBit);
-
-        //var cubeTransform = cubeObject.Components.Transform;
-        //var cubeRenderer = cubeObject.Components.Get<MeshRenderer>()!;
-        //var material = (StandardMaterial)cubeRenderer.Material!;
-        //var camera = cameraObject.Components.Get<Camera>()!;
-
-        //material.ModelMatrix = cubeTransform.GetModelMatrix();
-        //material.ViewMatrix = camera.GetViewMatrix();
-        //material.ProjectionMatrix = camera.GetProjectionMatrix((float)ClientSize.X / ClientSize.Y);
-        //material.Use();
-
-        //cubeRenderer.Mesh!.Draw();
 
         if (!_notFirstFrame)
         {
