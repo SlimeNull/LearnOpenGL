@@ -1,61 +1,124 @@
 ﻿using System.Collections;
+using OpenGaming.Components;
 
 namespace OpenGaming;
 
 public class GameObjectComponentsCollection : ICollection<GameComponent>
 {
-    private readonly List<GameComponent> _stroage = new();
+    private readonly List<GameComponent> _storage = new();
 
     public GameObject Owner { get; }
 
-    public int Count => ((ICollection<GameComponent>)_stroage).Count;
+    public Transform Transform => (Transform)_storage[0];
 
-    public bool IsReadOnly => ((ICollection<GameComponent>)_stroage).IsReadOnly;
+    public int Count => ((ICollection<GameComponent>)_storage).Count;
+
+    public bool IsReadOnly => ((ICollection<GameComponent>)_storage).IsReadOnly;
 
     public GameObjectComponentsCollection(GameObject owner)
     {
         Owner = owner;
+
+        // add transform component
+        Add(new Transform());
     }
 
-    public void Add(GameComponent item) => ((ICollection<GameComponent>)_stroage).Add(item);
-    public void Clear() => ((ICollection<GameComponent>)_stroage).Clear();
-    public bool Contains(GameComponent item) => ((ICollection<GameComponent>)_stroage).Contains(item);
-    public void CopyTo(GameComponent[] array, int arrayIndex) => ((ICollection<GameComponent>)_stroage).CopyTo(array, arrayIndex);
-    public bool Remove(GameComponent item) => ((ICollection<GameComponent>)_stroage).Remove(item);
-    public IEnumerator<GameComponent> GetEnumerator() => ((IEnumerable<GameComponent>)_stroage).GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_stroage).GetEnumerator();
-
-    public TComponent? GetComponent<TComponent>() where TComponent : GameComponent
+    public void Add(GameComponent component)
     {
-        return _stroage
+        if (component.Owner is not null)
+        {
+            throw new ArgumentException("The component already has an owner", nameof(component));
+        }
+
+        component.Owner = Owner;
+        ((ICollection<GameComponent>)_storage).Add(component);
+    }
+
+    public void Clear()
+    {
+        while (_storage.Count > 1)
+        {
+            var lastIndex = _storage.Count - 1;
+            var component = _storage[lastIndex];
+            component.Owner = null;
+
+            _storage.RemoveAt(lastIndex);
+        }
+
+        ((ICollection<GameComponent>)_storage).Clear();
+    }
+
+    public bool Contains(GameComponent item)
+    {
+        return ((ICollection<GameComponent>)_storage).Contains(item);
+    }
+    public bool Remove(GameComponent item)
+    {
+        var removed = ((ICollection<GameComponent>)_storage).Remove(item);
+        if (removed)
+        {
+            item.Owner = null;
+        }
+
+        return removed;
+    }
+
+    public void CopyTo(GameComponent[] array, int arrayIndex) => ((ICollection<GameComponent>)_storage).CopyTo(array, arrayIndex);
+    public IEnumerator<GameComponent> GetEnumerator() => ((IEnumerable<GameComponent>)_storage).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_storage).GetEnumerator();
+
+    public TComponent AddComponent<TComponent>() where TComponent : GameComponent, new()
+    {
+        var component = new TComponent();
+        Add(component);
+
+        return component;
+    }
+
+    public TComponent? Get<TComponent>() where TComponent : GameComponent
+    {
+        return _storage
             .OfType<TComponent>()
             .FirstOrDefault();
     }
 
-    public TComponent? RemoveComponent<TComponent>() where TComponent : GameComponent
+    public TComponent GetRequired<TComponent>() where TComponent : GameComponent
+    {
+        var component = Get<TComponent>();
+        if (component is null)
+        {
+            throw new InvalidOperationException("Component is not exist");
+        }
+
+        return component;
+    }
+
+    public TComponent? Remove<TComponent>() where TComponent : GameComponent
     {
         int index = 0;
-        while (index < _stroage.Count)
+        while (index < _storage.Count)
         {
-            if (_stroage[index] is not TComponent component)
+            if (_storage[index] is not TComponent component)
                 continue;
 
-            _stroage.RemoveAt(index);
+            _storage.RemoveAt(index);
+            component.Owner = null;
             return component;
         }
 
         return null;
     }
 
-    public IEnumerable<TComponent> RemoveComponents<TComponent>() where TComponent : GameComponent
+    public IEnumerable<TComponent> RemoveAll<TComponent>() where TComponent : GameComponent
     {
         int index = 0;
-        while (index < _stroage.Count)
+        while (index < _storage.Count)
         {
-            if (_stroage[index] is not TComponent component)
+            if (_storage[index] is not TComponent component)
                 continue;
 
-            _stroage.RemoveAt(index);
+            _storage.RemoveAt(index);
+            component.Owner = null;
             yield return component;
         }
     }

@@ -1,19 +1,103 @@
-﻿namespace OpenGaming.Components
+﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
+
+namespace OpenGaming.Components
 {
+    public enum CameraClearType
+    {
+        None,
+        Color,
+        Depth,
+        Skybox,
+    }
+
     public class Camera : GameComponent
     {
-        
+        public float FieldOfView { get; set; } = MathF.PI / 2;
+        public float DepthNear { get; set; } = 0.1f;
+        public float DepthFar { get; set; } = 100;
+
+        public CameraClearType ClearType { get; set; }
+        public Color4 ClearColor { get; set; } = new Color4(57, 112, 172, 255);
+        public float ClearDepth { get; set; } = 0;
+
+        private void Clear()
+        {
+
+            switch (ClearType)
+            {
+                case CameraClearType.None:
+                    break;
+
+                case CameraClearType.Color:
+                    GL.ClearColor(ClearColor);
+                    break;
+
+                case CameraClearType.Depth:
+                    GL.ClearDepth(ClearDepth);
+                    break;
+
+                case CameraClearType.Skybox:
+                    throw new NotImplementedException();
+                    break;
+            }
+        }
 
         public override void GameUpdate()
         {
             base.GameUpdate();
 
+            if (Owner is not GameObject selfGameObject ||
+                selfGameObject.Owner is not Game game)
+            {
+                return;
+            }
 
+            Clear();
+            
+            foreach (var gameObject in game.Objects)
+            {
+                if (!gameObject.IsActive)
+                {
+                    continue;
+                }
+
+                if (gameObject.Components.Get<Renderer>() is not Renderer renderer)
+                {
+                    continue;
+                }
+
+                renderer.Render(this);
+            }
         }
 
         public override void GameLateUpdate()
         {
             base.GameLateUpdate();
+        }
+
+        public Matrix4 GetViewMatrix()
+        {
+            if (Owner is null)
+            {
+                return default;
+            }
+
+            var transform = Owner.Components.Transform;
+
+            return
+                Matrix4.CreateTranslation(-transform.Position) *
+                Matrix4.CreateFromQuaternion(transform.Rotation.Inverted());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="aspect">Aspect ratio of the view (width / height).</param>
+        /// <returns></returns>
+        public Matrix4 GetProjectionMatrix(float aspect)
+        {
+            return Matrix4.CreatePerspectiveFieldOfView(FieldOfView, aspect, DepthNear, DepthFar);
         }
     }
 }

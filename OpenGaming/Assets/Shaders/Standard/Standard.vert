@@ -18,7 +18,7 @@ out vec3 vertexColor;
 
 void main()
 {
-    vec4 finalModelPosition = vec4(position, 1) + texture2D(displacementTexture, uv);
+    vec4 finalModelPosition = vec4(position, 1);
     vec4 finalPosition = projectionMatrix * viewMatrix * modelMatrix * finalModelPosition;
 
     gl_Position = finalPosition;

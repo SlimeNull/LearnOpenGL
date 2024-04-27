@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel;
+using LearnOpenGL.Components;
 using OpenGaming;
+using OpenGaming.Components;
+using OpenGaming.Materials;
+using OpenGaming.Meshes;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -11,33 +15,90 @@ namespace LearnOpenGL;
 
 partial class AppWindow : GameWindow
 {
-    // Create the vertices for our triangle. These are listed in normalized device coordinates (NDC)
-    // In NDC, (0, 0) is the center of the screen.
-    // Negative X coordinates move to the left, positive X move to the right.
-    // Negative Y coordinates move to the bottom, positive Y move to the top.
-    // OpenGL only supports rendering in 3D, so to create a flat triangle, the Z coordinate will be kept as 0.
-    private readonly float[] _vertices =
-    {
-    };
-
     public AppWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         : base(gameWindowSettings, nativeWindowSettings)
     {
+
+        cubeObject = new()
+        {
+            Components =
+            {
+                new MeshRenderer()
+                {
+                    Material = StandardMaterial.Create(),
+                    Mesh = CubeMesh.Instance,
+                },
+
+                new MyCube(),
+            }
+        };
+
+        cameraObject = new()
+        {
+            Components =
+            {
+                new Camera()
+                {
+
+                }
+            }
+        };
+
+        game = new Game()
+        {
+            Objects =
+            {
+                cubeObject,
+                cameraObject,
+            },
+            Output = this,
+        };
     }
+
+    Game game;
+    GameObject cubeObject;
+    GameObject cameraObject;
+
+    bool _notFirstFrame;
 
     // Now, we start initializing OpenGL.
     protected override unsafe void OnLoad()
     {
         base.OnLoad();
 
-    }
+        cameraObject.Components.Transform.Position = new Vector3(0, 0, 10);
 
-    // Now that initialization is done, let's create our render loop.
+        GL.ClearColor(0.6f, 0.6f, .3f, 1);
+    }
 
     protected override void OnRenderFrame(FrameEventArgs e)
     {
         base.OnRenderFrame(e);
 
+        GL.Clear(ClearBufferMask.ColorBufferBit);
+
+        //var cubeTransform = cubeObject.Components.Transform;
+        //var cubeRenderer = cubeObject.Components.Get<MeshRenderer>()!;
+        //var material = (StandardMaterial)cubeRenderer.Material!;
+        //var camera = cameraObject.Components.Get<Camera>()!;
+
+        //material.ModelMatrix = cubeTransform.GetModelMatrix();
+        //material.ViewMatrix = camera.GetViewMatrix();
+        //material.ProjectionMatrix = camera.GetProjectionMatrix((float)ClientSize.X / ClientSize.Y);
+        //material.Use();
+
+        //cubeRenderer.Mesh!.Draw();
+
+        if (!_notFirstFrame)
+        {
+            game.GameStart();
+            _notFirstFrame = true;
+        }
+
+        game.GameUpdate();
+        game.GameLateUpdate();
+
+        SwapBuffers();
     }
 
     protected override void OnUpdateFrame(FrameEventArgs e)

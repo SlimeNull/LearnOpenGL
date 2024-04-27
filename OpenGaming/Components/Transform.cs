@@ -13,7 +13,13 @@ namespace OpenGaming.Components
         public Vector3 Scale { get; set; }
         public Quaternion Rotation { get; set; }
 
-        public Matrix4 GetMatrix()
+        public Transform()
+        {
+            Scale = Vector3.One;
+            Rotation = Quaternion.Identity;
+        }
+
+        public Matrix4 GetModelMatrix()
         {
             var scaleMatrix = Matrix4.CreateScale(Scale);
             var rotationMatrix = Matrix4.CreateFromQuaternion(Rotation);

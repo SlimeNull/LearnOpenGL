@@ -1,8 +1,12 @@
-﻿namespace OpenGaming;
+﻿using OpenTK.Windowing.Desktop;
+
+namespace OpenGaming;
 
 public class Game
 {
     public GameObjectsCollection Objects { get; }
+
+    public GameWindow? Output { get; set; }
 
     public Game()
     {

@@ -37,9 +37,10 @@ namespace OpenGaming
             GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * _data.Length, _data, BufferUsageHint.StaticDraw);
 
             _glVertexArray = GL.GenVertexArray();
+            GL.BindVertexArray(_glVertexArray);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, sizeof(float) * DataRowSize, 0);
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, sizeof(float) * DataRowSize, 0);
-            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, sizeof(float) * DataRowSize, 0);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, sizeof(float) * DataRowSize, sizeof(float) * 3);
+            GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, sizeof(float) * DataRowSize, sizeof(float) * 6);
 
             GL.EnableVertexArrayAttrib(_glVertexArray, 0);
             GL.EnableVertexArrayAttrib(_glVertexArray, 1);
@@ -51,10 +52,10 @@ namespace OpenGaming
             Dispose(disposing: false);
         }
 
-        public virtual void Use()
+        public virtual void Draw()
         {
             GL.BindVertexArray(_glVertexArray);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, _data.Length);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, _data.Length / DataRowSize);
         }
 
         protected virtual void Dispose(bool disposing)

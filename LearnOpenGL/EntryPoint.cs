@@ -12,7 +12,5 @@ var nativeWindowSettings = new NativeWindowSettings()
 
 using (var window = new AppWindow(GameWindowSettings.Default, nativeWindowSettings))
 {
-
-    var cubeMesh = CubeMesh.Create();
     window.Run();
 }

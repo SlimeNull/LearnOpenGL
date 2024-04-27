@@ -20,4 +20,8 @@ void main()
 {
     vec4 color = vec4(vertexColor, 1);
     vec4 ambientColor = color * ambient;
+
+    vec4 finalColor = vec4(vertexColor, 1);
+
+    fragmentColor = finalColor;
 }

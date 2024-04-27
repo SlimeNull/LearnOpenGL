@@ -8,5 +8,15 @@
         {
             base.GameUpdate();
         }
+
+        public override void Render(Camera camera)
+        {
+            base.Render(camera);
+
+            if (Mesh is not null)
+            {
+                Mesh.Draw();
+            }
+        }
     }
 }

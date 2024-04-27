@@ -7,7 +7,7 @@ using OpenGaming;
 using OpenGaming.Properties;
 using OpenTK.Mathematics;
 
-namespace LearnOpenGL.Game.Shaders
+namespace OpenGaming.Shaders
 {
     public class StandardShader : Shader
     {

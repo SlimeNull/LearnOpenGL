@@ -72,5 +72,9 @@ namespace OpenGaming.Meshes
 
         public static CubeMesh Create()
             => new CubeMesh();
+
+        private static CubeMesh? _instance;
+        public static CubeMesh Instance => 
+            _instance ??= new();
     }
 }

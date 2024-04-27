@@ -14,6 +14,21 @@ public class Material
         Shader = shader;
     }
 
+    public T? Get<T>(string name)
+    {
+        if (!_propertyValues.TryGetValue(name, out var value))
+        {
+            return default;
+        }
+
+        if (value is not T finalValue)
+        {
+            throw new InvalidOperationException($"Target value is not {typeof(T).Name}");
+        }
+
+        return finalValue;
+    }
+
     public void Set(string name, Vector4 value)
         => _propertyValues[name] = value;
 
