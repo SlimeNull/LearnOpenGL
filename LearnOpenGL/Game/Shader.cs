@@ -1,14 +1,14 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace LearnOpenGL;
+namespace LearnOpenGL.Gaming;
 
 public class Shader : IDisposable
 {
     private bool _disposedValue;
 
-    public int Handle { get; set; }
+    public int ProgramHandle { get; set; }
 
-    public Shader(
+    protected Shader(
         TextReader vertexShaderSource,
         TextReader fragmentShaderSource)
     {
@@ -35,20 +35,20 @@ public class Shader : IDisposable
             throw new Exception($"Failed to compile fragment shader. {info}");
         }
 
-        Handle = GL.CreateProgram();
-        GL.AttachShader(Handle, vertexShader);
-        GL.AttachShader(Handle, fragmentShader);
+        ProgramHandle = GL.CreateProgram();
+        GL.AttachShader(ProgramHandle, vertexShader);
+        GL.AttachShader(ProgramHandle, fragmentShader);
 
-        GL.LinkProgram(Handle);
-        GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out var programLinkSuccess);
+        GL.LinkProgram(ProgramHandle);
+        GL.GetProgram(ProgramHandle, GetProgramParameterName.LinkStatus, out var programLinkSuccess);
         if (programLinkSuccess != (int)All.True)
         {
-            string info = GL.GetProgramInfoLog(Handle);
+            string info = GL.GetProgramInfoLog(ProgramHandle);
             throw new Exception($"Failed to link program. {info}");
         }
 
-        GL.DetachShader(Handle, vertexShader);
-        GL.DetachShader(Handle, fragmentShader);
+        GL.DetachShader(ProgramHandle, vertexShader);
+        GL.DetachShader(ProgramHandle, fragmentShader);
         GL.DeleteShader(vertexShader);
         GL.DeleteShader(fragmentShader);
     }
@@ -60,7 +60,7 @@ public class Shader : IDisposable
 
     public void Use()
     {
-        GL.UseProgram(Handle);
+        GL.UseProgram(ProgramHandle);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -69,7 +69,7 @@ public class Shader : IDisposable
         {
             if (disposing)
             {
-                GL.DeleteProgram(Handle);
+                GL.DeleteProgram(ProgramHandle);
             }
 
             // TODO: 释放未托管的资源(未托管的对象)并重写终结器
@@ -83,5 +83,17 @@ public class Shader : IDisposable
         // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    public static Shader Create(TextReader vertexShaderSource, TextReader fragmentShaderSource)
+    {
+        return new Shader(vertexShaderSource, fragmentShaderSource);
+    }
+
+    public static Shader Create(string vertexShaderSource, string fragmentShaderSource)
+    {
+        return new Shader(
+            new StringReader(vertexShaderSource),
+            new StringReader(fragmentShaderSource));
     }
 }

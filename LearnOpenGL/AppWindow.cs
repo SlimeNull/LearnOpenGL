@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using LearnOpenGL.Gaming;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -225,17 +226,17 @@ partial class AppWindow : GameWindow
         // Bind the shader
         _shader!.Use();
 
-        var transformLocation = GL.GetUniformLocation(_shader.Handle, "transform");
+        var transformLocation = GL.GetUniformLocation(_shader.ProgramHandle, "transform");
         var finalMatrix = _translateMatrix4 * _rotationMatrix4 * _scaleMatrix4;
         GL.UniformMatrix4(transformLocation, false, ref finalMatrix);
 
 
         var modelMatrix = Matrix4.CreateTranslation(0, 0, -3f);
-        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "model"), false, ref modelMatrix);
-        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "view"), false, ref _viewMatrix);
-        GL.UniformMatrix4(GL.GetUniformLocation(_shader.Handle, "projection"), false, ref _projectMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "model"), false, ref modelMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "view"), false, ref _viewMatrix);
+        GL.UniformMatrix4(GL.GetUniformLocation(_shader.ProgramHandle, "projection"), false, ref _projectMatrix);
 
-        var timeLocation = GL.GetUniformLocation(_shader.Handle, "time");
+        var timeLocation = GL.GetUniformLocation(_shader.ProgramHandle, "time");
         GL.Uniform1(timeLocation, (float)Environment.TickCount / 1000);
 
         // Bind the VAO
@@ -386,7 +387,7 @@ partial class AppWindow : GameWindow
 
         if (_shader is not null)
         {
-            GL.DeleteProgram(_shader.Handle);
+            GL.DeleteProgram(_shader.ProgramHandle);
         }
 
         base.OnUnload();
