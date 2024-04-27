@@ -66,8 +66,6 @@ partial class AppWindow : GameWindow
     protected override unsafe void OnLoad()
     {
         base.OnLoad();
-
-        cameraObject.Components.Transform.Position = new Vector3(0, 0, 10);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)
@@ -94,6 +92,8 @@ partial class AppWindow : GameWindow
     protected override void OnResize(ResizeEventArgs e)
     {
         base.OnResize(e);
+
+        GL.Viewport(0, 0, ClientSize.X, ClientSize.Y);
     }
 
     // Now, for cleanup.

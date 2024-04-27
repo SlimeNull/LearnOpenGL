@@ -18,10 +18,12 @@ namespace LearnOpenGL.Components
 
             if (Owner is GameObject selfGameObject)
             {
+                var transform = selfGameObject.Components.Transform;
                 var renderer = selfGameObject.Components.GetRequired<Renderer>();
                 var material = (StandardMaterial)renderer.Material!;
 
-                material.Color = new Vector3(0, 1, 1);
+                transform.Position = new Vector3(0, 0, -10);
+                material.Color = new Vector3(0.44f, 0.32f, 0.65f);
             }
         }
     }
