@@ -52,6 +52,14 @@ out vec4 fragmentColor;
 void main()
 {
     vec3 color = vertexColor;
+
+    ivec2 colorTextureSize = textureSize(colorTexture, 0);
+    if (colorTextureSize.x > 1)
+    {
+        color = vec3(texture(colorTexture, vertexUV));
+    }
+
+
     vec3 ambientColor = color * ambient;
     vec3 diffuseColor = vec3(0, 0, 0);
     vec3 specularColor = vec3(0, 0, 0);

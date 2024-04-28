@@ -4,6 +4,7 @@ using OpenGaming;
 using OpenGaming.Components;
 using OpenGaming.Materials;
 using OpenGaming.Meshes;
+using OpenGaming.Textures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -18,6 +19,12 @@ partial class AppWindow : GameWindow
     public AppWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         : base(gameWindowSettings, nativeWindowSettings)
     {
+        var imageBytes = File.ReadAllBytes("Assets/avatar.jpg");
+        var image = StbiSharp.Stbi.LoadFromMemory(imageBytes, 3);
+
+        var texture = Texture2D.Create(PixelInternalFormat.Rgb, PixelFormat.Rgb, image.Width, image.Height, image.Data.ToArray());
+        var cubeMaterial = StandardMaterial.Create();
+        cubeMaterial.ColorTexture = texture;
 
         cubeObject = new()
         {
@@ -25,7 +32,7 @@ partial class AppWindow : GameWindow
             {
                 new MeshRenderer()
                 {
-                    Material = StandardMaterial.Create(),
+                    Material = cubeMaterial,
                     Mesh = CubeMesh.Instance,
                 },
 
