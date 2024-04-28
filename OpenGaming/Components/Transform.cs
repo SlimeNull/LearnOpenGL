@@ -193,7 +193,7 @@ namespace OpenGaming.Components
             {
                 foreach (var transform in _storage)
                 {
-                    transform.Owner = null;
+                    transform._owner = null;
                 }
 
                 ((ICollection<Transform>)_storage).Clear();
@@ -203,7 +203,7 @@ namespace OpenGaming.Components
                 bool removed = ((ICollection<Transform>)_storage).Remove(transform);
                 if (removed)
                 {
-                    transform.Owner = null;
+                    transform._owner = null;
                 }
 
                 return removed;

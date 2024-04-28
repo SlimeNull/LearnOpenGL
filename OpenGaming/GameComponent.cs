@@ -2,7 +2,13 @@
 
 public class GameComponent
 {
-    public GameObject? Owner { get; internal set; }
+    internal GameObject? _owner;
+
+    public GameObject Owner 
+    { 
+        get => _owner ?? throw new InvalidOperationException("This game component is not added to any game object."); 
+        internal set => _owner = value; 
+    }
 
     public virtual void GameStart()
     {

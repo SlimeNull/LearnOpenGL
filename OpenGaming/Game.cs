@@ -85,12 +85,12 @@ public class Game
 
         public void Add(GameObject gameObject)
         {
-            if (gameObject.Owner is not null)
+            if (gameObject._owner is not null)
             {
                 throw new ArgumentException("The GameObject already has an owner", nameof(gameObject));
             }
 
-            gameObject.Owner = Owner;
+            gameObject._owner = Owner;
             ((ICollection<GameObject>)_storage).Add(gameObject);
         }
 
@@ -98,7 +98,7 @@ public class Game
         {
             foreach (var gameObject in _storage)
             {
-                gameObject.Owner = null;
+                gameObject._owner = null;
             }
 
             ((ICollection<GameObject>)_storage).Clear();
@@ -109,7 +109,7 @@ public class Game
             bool removed = ((ICollection<GameObject>)_storage).Remove(item);
             if (removed)
             {
-                item.Owner = null;
+                item._owner = null;
             }
 
             return removed;

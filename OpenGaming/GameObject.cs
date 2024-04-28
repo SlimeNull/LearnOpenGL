@@ -5,7 +5,13 @@ namespace OpenGaming;
 
 public class GameObject
 {
-    public Game? Owner { get; internal set; }
+    internal Game? _owner;
+
+    public Game Owner 
+    { 
+        get => _owner ?? throw new InvalidOperationException("This game object is not added to any game"); 
+        internal set => _owner = value; 
+    }
 
     public bool IsActive { get; set; } = true;
 
@@ -40,12 +46,12 @@ public class GameObject
 
         public void Add(GameComponent component)
         {
-            if (component.Owner is not null)
+            if (component._owner is not null)
             {
                 throw new ArgumentException("The component already has an owner", nameof(component));
             }
 
-            component.Owner = Owner;
+            component._owner = Owner;
             ((ICollection<GameComponent>)_storage).Add(component);
         }
 
@@ -55,7 +61,7 @@ public class GameObject
             {
                 var lastIndex = _storage.Count - 1;
                 var component = _storage[lastIndex];
-                component.Owner = null;
+                component._owner = null;
 
                 _storage.RemoveAt(lastIndex);
             }
@@ -72,7 +78,7 @@ public class GameObject
             var removed = ((ICollection<GameComponent>)_storage).Remove(item);
             if (removed)
             {
-                item.Owner = null;
+                item._owner = null;
             }
 
             return removed;
@@ -117,7 +123,7 @@ public class GameObject
                     continue;
 
                 _storage.RemoveAt(index);
-                component.Owner = null;
+                component._owner = null;
                 return component;
             }
 
@@ -133,7 +139,7 @@ public class GameObject
                     continue;
 
                 _storage.RemoveAt(index);
-                component.Owner = null;
+                component._owner = null;
                 yield return component;
             }
         }
