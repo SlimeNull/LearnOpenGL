@@ -30,6 +30,8 @@ namespace OpenGaming.Components
                 standardMaterial.ModelMatrix = selfGameObject.Components.Transform.GetModelMatrix();
                 standardMaterial.ViewMatrix = camera.GetViewMatrix();
                 standardMaterial.ProjectionMatrix = camera.GetProjectionMatrix(aspect);
+
+                standardMaterial.ViewPosition = camera.Owner.Components.Transform.WorldPosition;
                 standardMaterial.PointLights = lightingData.PointLights;
             }
 

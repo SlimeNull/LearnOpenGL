@@ -30,13 +30,15 @@ in vec3 vertexColor;
 
 uniform float ambient = 0.1;
 uniform float diffuse = 0.1;
-uniform float specular;
+uniform float specular = 0.5;
 uniform float ambientColor;
 
 uniform sampler2D colorTexture;
 uniform sampler2D ambientTexture;
 uniform sampler2D diffuseTexture;
 uniform sampler2D specularTexture;
+
+uniform vec3 viewPosition;
 
 uniform int spotLightCount = 0;
 uniform int directionalLightCount = 0;
@@ -49,19 +51,25 @@ out vec4 fragmentColor;
 
 void main()
 {
-    vec4 color = vec4(vertexColor, 1);
-    vec4 ambientColor = color * ambient;
-    vec4 diffuseColor = vec4(0, 0, 0, 0);
+    vec3 color = vertexColor;
+    vec3 ambientColor = color * ambient;
+    vec3 diffuseColor = vec3(0, 0, 0);
+    vec3 specularColor = vec3(0, 0, 0);
 
     for (int i = 0; i < pointLightCount; i++)
     {
-        vec3 lightDir = pointLights[i].position - vertexWorldPosition;
+        vec3 lightDir = normalize(pointLights[i].position - vertexWorldPosition);
+        vec3 viewDir = normalize(viewPosition - vertexWorldPosition);
+        vec3 reflectDir = reflect(-lightDir, vertexWorldNormal);
+
         float diff = max(dot(vertexWorldNormal, lightDir), 0.0);
+        float spec = pow(max(dot(viewDir, reflectDir), 0), 32);
         
-        diffuseColor += vec4(pointLights[i].color, 1) * diff * diffuse;
+        diffuseColor += pointLights[i].color * diff * diffuse;
+        specularColor += pointLights[i].color * spec * specular;
     }
 
-    vec4 finalColor = ambientColor + diffuseColor;
+    vec4 finalColor = vec4(ambientColor + diffuseColor + specularColor, 1);
 
     fragmentColor = finalColor;
 }

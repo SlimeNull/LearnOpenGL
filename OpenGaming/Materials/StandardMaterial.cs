@@ -9,6 +9,7 @@ namespace OpenGaming.Materials
     public class StandardMaterial : Material, IStandardMaterial
     {
         const string uniformNameColor = "color";
+        const string uniformNameViewPosition = "viewPosition";
 
         const string uniformNameModelMatrix = "modelMatrix";
         const string uniformNameViewMatrix = "viewMatrix";
@@ -29,8 +30,11 @@ namespace OpenGaming.Materials
         public Matrix4 ModelMatrix { get => Get<Matrix4>(uniformNameModelMatrix); set => Set(uniformNameModelMatrix, value); }
         public Matrix4 ViewMatrix { get => Get<Matrix4>(uniformNameViewMatrix); set => Set(uniformNameViewMatrix, value); }
         public Matrix4 ProjectionMatrix { get => Get<Matrix4>(uniformNameProjectionMatrix); set => Set(uniformNameProjectionMatrix, value); }
+        public Vector3 ViewPosition { get => Get<Vector3>(uniformNameViewPosition); set => Set(uniformNameViewPosition, value); }
 
         public List<PointLightData>? PointLights { get; set; }
+        public List<SpotLightData>? SpotLights { get; set; }
+        public List<DirectionalLightData>? DirectionalLights { get; set; }
 
         public Vector3 Color { get => Get<Vector3>(uniformNameColor); set => Set(uniformNameColor, value); }
 
