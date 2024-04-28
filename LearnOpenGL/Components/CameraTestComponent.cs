@@ -8,6 +8,7 @@ namespace LearnOpenGL.Components
     public class CameraTestComponent : GameComponent
     {
         public float MoveSpeed { get; set; } = 10;
+        public float RotateSpeed { get; set; } = MathF.PI / 100;
 
         public override void GameUpdate(float deltaTime)
         {
@@ -53,7 +54,30 @@ namespace LearnOpenGL.Components
                 }
             }
 
-            transform.Translate(movement * deltaTime);
+            var rotationY = 0.0f;
+            var rotationX = 0.0f;
+
+            if (mouseState.IsButtonDown(MouseButton.Right))
+            {
+                rotationY = -mouseState.Delta.X * RotateSpeed;
+                rotationX = -mouseState.Delta.Y * RotateSpeed;
+            }
+
+            var eulerAngles = transform.Rotation.ToEulerAngles();
+            eulerAngles.X += rotationX;
+            eulerAngles.Y += rotationY;
+
+            if (eulerAngles.X > 60)
+            {
+                eulerAngles.X = 60;
+            }
+            else if (eulerAngles.X < -60)
+            {
+                eulerAngles.X = -60;
+            }
+
+            transform.Translate(movement * deltaTime, Space.Self);
+            transform.Rotation = Quaternion.FromEulerAngles(eulerAngles);
 
             Debug.WriteLine($"Camera Rotation: {transform.Rotation.ToEulerAngles()}");
         }

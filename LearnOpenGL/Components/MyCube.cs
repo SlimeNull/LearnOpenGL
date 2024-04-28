@@ -32,8 +32,7 @@ namespace LearnOpenGL.Components
             var renderer = selfGameObject.Components.GetRequired<Renderer>();
             var material = (StandardMaterial)renderer.Material!;
 
-            transform.Position = new Vector3(0, 0, -10);
-            material.Color = new Vector3(0.44f, 0.32f, 0.65f);
+            material.Color = new Vector3(40 / 255f, 174 / 255f, 255 / 255f);
         }
 
         public override void GameUpdate(float deltaTime)
@@ -100,8 +99,8 @@ namespace LearnOpenGL.Components
 
             var rotationEulerAngles = new Vector3(rotationX, rotationY, 0);
 
-            transform.Translate(movement * deltaTime);
-            transform.Rotate(Quaternion.FromEulerAngles(rotationEulerAngles));
+            transform.Translate(movement * deltaTime, Space.Self);
+            transform.Rotate(Quaternion.FromEulerAngles(rotationEulerAngles), Space.World);
 
 
             Debug.WriteLine($"Cube Rotation: {transform.Rotation.ToEulerAngles()}");

@@ -33,13 +33,29 @@ partial class AppWindow : GameWindow
             }
         };
 
+        lightObject = new()
+        {
+            Components =
+            {
+                new MeshRenderer()
+                {
+                    Material = StandardMaterial.Create(),
+                    Mesh = CubeMesh.Instance,
+                },
+                new Light()
+                {
+                    LightType = LightType.Point,
+                }
+            }
+        };
+
         cameraObject = new()
         {
             Components =
             {
                 new Camera()
                 {
-                    ClearType = CameraClearType.Color,
+                    ClearType = CameraClearType.SolidColor,
                     ClearColor = new Color4(30, 30, 30, 255)
                 },
 
@@ -47,11 +63,20 @@ partial class AppWindow : GameWindow
             }
         };
 
+
+        cubeObject.Components.Transform.Position = new Vector3(0, 0, -10);
+        lightObject.Components.Transform.Position = new Vector3(3, 0, -9);
+
+        // make light smaller
+        lightObject.Components.Transform.Scale = new Vector3(0.3f);
+        (lightObject.Components.GetRequired<MeshRenderer>().Material as StandardMaterial)!.Color = new Vector3(1, 1, 1);
+
         game = new Game()
         {
             Objects =
             {
                 cubeObject,
+                lightObject,
                 cameraObject,
             },
             Output = this,
@@ -62,6 +87,7 @@ partial class AppWindow : GameWindow
 
     Game game;
     GameObject cubeObject;
+    GameObject lightObject;
     GameObject cameraObject;
 
     bool _notFirstFrame;
@@ -71,12 +97,12 @@ partial class AppWindow : GameWindow
     {
         base.OnLoad();
 
-        //// 深度测试
-        //GL.Enable(EnableCap.DepthTest);
+        // 深度测试
+        GL.Enable(EnableCap.DepthTest);
 
-        //// 背面剔除
-        //GL.Enable(EnableCap.CullFace);
-        //GL.FrontFace(FrontFaceDirection.Cw);
+        // 背面剔除
+        GL.Enable(EnableCap.CullFace);
+        GL.FrontFace(FrontFaceDirection.Cw);
     }
 
     protected override void OnRenderFrame(FrameEventArgs e)

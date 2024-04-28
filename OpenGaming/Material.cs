@@ -53,7 +53,7 @@ public class Material
     public bool Unset(string name)
         => _propertyValues.Remove(name);
 
-    public void Use()
+    public virtual void Use()
     {
         Shader.Use();
 

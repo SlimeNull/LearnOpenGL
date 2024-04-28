@@ -1,18 +1,20 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using OpenGaming.Rendering;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace OpenGaming.Components
 {
-
     public class Camera : GameComponent
     {
+        private readonly LightingData _lightingData = new();
+
         public float FieldOfView { get; set; } = MathF.PI / 2;
         public float DepthNear { get; set; } = 0.1f;
         public float DepthFar { get; set; } = 100;
 
         public CameraClearType ClearType { get; set; }
         public Color4 ClearColor { get; set; } = new Color4(57, 112, 172, 255);
-        public float ClearDepth { get; set; } = 0;
+        public float ClearDepth { get; set; } = 100;
 
         private void Clear()
         {
@@ -22,12 +24,13 @@ namespace OpenGaming.Components
                 case CameraClearType.None:
                     break;
 
-                case CameraClearType.Color:
+                case CameraClearType.SolidColor:
                     GL.ClearColor(ClearColor);
-                    GL.Clear(ClearBufferMask.ColorBufferBit);
+                    GL.ClearDepth(ClearDepth);
+                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
                     break;
 
-                case CameraClearType.Depth:
+                case CameraClearType.DepthOnly:
                     GL.ClearDepth(ClearDepth);
                     GL.Clear(ClearBufferMask.DepthBufferBit);
                     break;
@@ -45,7 +48,41 @@ namespace OpenGaming.Components
             }
 
             Clear();
-            
+
+            _lightingData.Clear();
+            foreach (var gameObject in game.Objects)
+            {
+                if (!gameObject.IsActive)
+                {
+                    continue;
+                }
+
+                if (gameObject.Components.Get<Light>() is not Light light)
+                {
+                    continue;
+                }
+
+                var transform = gameObject.Components.Transform;
+
+                if (light.LightType == LightType.Spot)
+                {
+
+                }
+                else if (light.LightType == LightType.Directional)
+                {
+
+                }
+                else
+                {
+                    _lightingData.PointLights.Add(
+                        new PointLightData()
+                        {
+                            Position = transform.WorldPosition,
+                            Color = light.Color,
+                        });
+                }
+            }
+
             foreach (var gameObject in game.Objects)
             {
                 if (!gameObject.IsActive)
@@ -58,7 +95,7 @@ namespace OpenGaming.Components
                     continue;
                 }
 
-                renderer.Render(this);
+                renderer.Render(this, _lightingData);
             }
         }
 

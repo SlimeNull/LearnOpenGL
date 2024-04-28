@@ -1,4 +1,6 @@
-﻿namespace OpenGaming.Components
+﻿using OpenGaming.Rendering;
+
+namespace OpenGaming.Components
 {
     public abstract class Renderer : GameComponent
     {
@@ -9,7 +11,7 @@
             base.GameUpdate(deltaTime);
         }
 
-        public virtual void Render(Camera camera)
+        public virtual void Render(Camera camera, LightingData lightingData)
         {
             if (Owner is not GameObject selfGameObject ||
                 selfGameObject.Owner is not Game game)
@@ -28,6 +30,7 @@
                 standardMaterial.ModelMatrix = selfGameObject.Components.Transform.GetModelMatrix();
                 standardMaterial.ViewMatrix = camera.GetViewMatrix();
                 standardMaterial.ProjectionMatrix = camera.GetProjectionMatrix(aspect);
+                standardMaterial.PointLights = lightingData.PointLights;
             }
 
             if (Material is not null)

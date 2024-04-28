@@ -3,7 +3,7 @@
     public enum CameraClearType
     {
         None,
-        Color,
-        Depth
+        SolidColor,
+        DepthOnly
     }
 }

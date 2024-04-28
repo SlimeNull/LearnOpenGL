@@ -1,4 +1,6 @@
-﻿namespace OpenGaming.Components
+﻿using OpenGaming.Rendering;
+
+namespace OpenGaming.Components
 {
     public class MeshRenderer : Renderer
     {
@@ -9,9 +11,9 @@
             base.GameUpdate(deltaTime);
         }
 
-        public override void Render(Camera camera)
+        public override void Render(Camera camera, LightingData lightingData)
         {
-            base.Render(camera);
+            base.Render(camera, lightingData);
 
             if (Mesh is not null)
             {

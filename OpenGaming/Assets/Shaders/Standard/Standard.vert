@@ -12,7 +12,7 @@ uniform vec3 color;
 uniform sampler2D displacementTexture;
 
 out vec3 vertexWorldPosition;
-out vec3 vertexNormal;
+out vec3 vertexWorldNormal;
 out vec2 vertexUV;
 out vec3 vertexColor;
 
@@ -24,7 +24,7 @@ void main()
     gl_Position = finalPosition;
 
     vertexWorldPosition = vec3(modelMatrix * vec4(position, 1));
-    vertexNormal = normal;
+    vertexWorldNormal = transpose(inverse(mat3(modelMatrix))) * normal;
     vertexUV = uv;
     vertexColor = color;
 }

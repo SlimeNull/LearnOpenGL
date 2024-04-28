@@ -3,5 +3,5 @@
 public enum Space
 {
     World,
-    Mode,
+    Self,
 }
